@@ -9,7 +9,7 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(express.static('kepek'));
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
@@ -35,6 +35,7 @@ app.get("/", (req, res) => {
 // routes
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
+require('./app/routes/sajatbackend')(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
