@@ -32,7 +32,56 @@ module.exports = function(app) {
 
 
 
+  app.post('/kommentfelvitel', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database:'zarodolgozat_adatb'
+    })
+    
+    connection.connect()
+    
+    let dt=new Date();
+    let teljesdat=dt.getFullYear()+"-"+  (dt.getMonth()+1)   +"-"+dt.getDate();
+    connection.query("INSERT INTO kerdes VALUES (NULL, '"+req.body.bevitel1+"', '"+req.body.bevitel2+"', '"+teljesdat+"') ", function (err, rows, fields) {
+      if (err) throw err
+    
+      console.log("Sikeres felvitel!")
 
+      res.send("Sikeres felvitel!")
+    })
+    
+    connection.end()    
+
+  })  
+
+
+  app.post('/kereses', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'zarodolgozat_adatb'
+    })
+    
+    connection.connect()
+    var feltetel2='komment_nev LIKE "%'+req.body.bevitel1+'%"';
+    var feltetel1='komment_szoveg LIKE "%'+req.body.bevitel1+'%"';
+    connection.query('SELECT * FROM kerdes WHERE '+feltetel2+' OR '+feltetel1+'', function (err, rows, fields) {
+      if (err) throw err
+    
+      console.log(rows)
+  
+      res.send(rows)
+    })
+    
+    
+    connection.end()    
+  
+  })
 
 
 
@@ -87,28 +136,6 @@ module.exports = function(app) {
   })  
 
 
-  app.get('/kereses', (req, res) => {
-    var mysql = require('mysql')
-    var connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'zarodolgozat_adatb'
-    })
-    
-    connection.connect()
-    
-    connection.query('SELECT * from kerdes', function (err, rows, fields) {
-      if (err) throw err
-    
-      console.log(rows)
-
-      res.send(rows)
-    })
-    
-    connection.end()    
-
-  })
 
 
   app.get('/termekek', (req, res) => {
@@ -136,31 +163,7 @@ module.exports = function(app) {
 
 
 
-  app.post('/kereses', (req, res) => {
-    var mysql = require('mysql')
-    var connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'zarodolgozat_adatb'
-    })
-    
-    connection.connect()
-    var feltetel2='komment_nev LIKE "%'+req.body.bevitel1+'%"';
-    var feltetel1='komment_szoveg LIKE "%'+req.body.bevitel1+'%"';
-    connection.query('SELECT * FROM kerdes WHERE '+feltetel2+' OR '+feltetel1+'', function (err, rows, fields) {
-      if (err) throw err
-    
-      console.log(rows)
-  
-      res.send(rows)
-    })
-    
-    
-    connection.end()    
-  
-  })
-
+ 
 
   app.post('/torol', (req, res) => {
     var mysql = require('mysql')
@@ -217,36 +220,8 @@ module.exports = function(app) {
 
   })
 
-
+/*
   app.post('/termekfelvitel', (req, res) => {
-    var mysql = require('mysql')
-    var connection = mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'zarodolgozat_adatb'
-    })
-    
-    connection.connect()
-    
-    
-    let dt=new Date();
-    let teljesdat=dt.getFullYear()+"-"+  (dt.getMonth()+1)   +"-"+dt.getDate();
-
-    connection.query("INSERT INTO termekek VALUES (NULL, '"+req.body.bevitel1+"', '"+req.body.bevitel2+"','"+req.body.bevitel3+"')", function (err, rows, fields) {
-      if (err) throw err
-    
-      console.log("Sikeres feltoltés!")
-
-      res.send("Sikeres feltoltés!")
-    })
-    
-    connection.end()    
-
-  })
-  
-
-  app.post('/termekfelvitel2', (req, res) => {
     var mysql = require('mysql')
     var connection = mysql.createConnection({
       host: 'localhost',
@@ -260,7 +235,34 @@ module.exports = function(app) {
     
    
 
-    connection.query("INSERT INTO termekek VALUES (NULL, '"+req.body.bevitel1+"', '"+req.body.bevitel2+"','"+req.body.bevitel3+"','"+req.body.bevitel4+"','"+req.body.bevitel5+"')", function (err, rows, fields) {
+    connection.query("INSERT INTO termekek VALUES (NULL, '"+req.body.bevitel1+"', '"+req.body.bevitel2+"','"+req.body.bevitel3+"',"+req.body.bevitel4+",'"+req.body.bevitel5+"')", function (err, rows, fields) {
+      if (err) throw err
+    
+      console.log("Sikeres feltoltés!")
+
+      res.send("Sikeres feltoltés!")
+    })
+    
+    connection.end()    
+
+  })
+  */
+
+  app.post('/termekfelvitel', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'zarodolgozat_adatb'
+    })
+    
+    connection.connect()
+    
+    
+   
+
+    connection.query("INSERT INTO termekek VALUES (NULL, '"+req.body.bevitel1+"', '"+req.body.bevitel2+"','"+req.body.bevitel3+"',"+req.body.bevitel4+",'"+req.body.bevitel5+"')", function (err, rows, fields) {
       if (err) throw err
     
       console.log("Sikeres feltoltés!")
@@ -300,6 +302,34 @@ module.exports = function(app) {
 
   })
 
+
+
+
+
+  app.get('/kosar', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'zarodolgozat_adatb'
+    })
+    
+    connection.connect()
+   
+    connection.query('SELECT termek_id FROM termekek', function (err, rows, fields) {
+      if (err) throw err
+    
+      console.log(rows)
+  
+      res.send(rows)
+    })
+    
+    
+    connection.end()    
+ 
+
+  })
 
 
 
